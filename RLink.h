@@ -61,6 +61,9 @@ private:
     dhmatrix* dhm; // Pointer to a transformation matrix for this link.
     double qvalue; // Value of joint variable.
     GLuint* textures; // Textures Array.
+    
+    void enableSphereTexture();
+    void enablePrismaTexture();
 };
 
 #endif	/* RLINK_H */

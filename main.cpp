@@ -47,27 +47,60 @@ double dh[] =   {0,pi2,5.0,1,
                 0,0,5,1};
 Robot* r;
 
-GLuint texture[1];
+GLuint texture[3];
+
+static GLfloat xequalzero[] = {1.0, 0.0, 0.0, 0.0};
+static GLfloat slanted[] = {1.0, 1.0, 1.0, 0.0};
 
 void LoadGLTextures() {	
     // Load Texture
     BMPImage *image1 = new BMPImage();
+    BMPImage *image2 = new BMPImage();
+    BMPImage *image3 = new BMPImage();
 
     if (!image1->loadImage("./res/copper.bmp")) {
 	exit(1);
-    }        
+    }       
+    
+    if (!image2->loadImage("./res/zink.bmp")) {
+	exit(1);
+    }
+    
+    if (!image3->loadImage("./res/grass.bmp")) {
+	exit(1);
+    }  
 
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+    
     // Create Texture	
-    glGenTextures(1, &texture[0]);
+    glGenTextures(2, &texture[0]);
     glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
-
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
     // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
     // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->getX(), image1->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image1->getData());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image1->getX(), image1->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image1->getData());
+
+    glBindTexture(GL_TEXTURE_2D, texture[1]); 
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
+
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
+    
+    delete image1;
+    delete image2;
+    delete image3;
 };
 
 void init(){
@@ -75,9 +108,10 @@ void init(){
     GLfloat mat_shininess[] = { 25.0};
     GLfloat light_position[] = { 20.0, 20.0, 20.0, 1.0};
     GLfloat white_light[] = { 1, 1, 1, 1.0 };
-    GLfloat lmodel_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
+    GLfloat lmodel_ambient[] = { 1, 1, 1, 1.0 };
     
-    glClearColor(0.0,0.0,0.0,0.0);
+    glClearColor(0.5,0.5,1.0,1.0);
+    glClearDepth(1.0); 
     glShadeModel(GL_SMOOTH);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -89,27 +123,41 @@ void init(){
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
-    
-    LoadGLTextures();
-    r = new Robot(numlink,dh,texture);
     glEnable(GL_TEXTURE_2D);
-    
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
-    glEnable(GL_TEXTURE_GEN_R);
-    glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
-    glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
-    glTexGeni(GL_R,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
+    glEnable(GL_CULL_FACE);	
+    
+    //FOG					// Which Fog To Use
+    GLfloat fogColor[4]= {0.5f, 0.5f, 1.0f, 1.0f};		// Fog Color
+    glFogi(GL_FOG_MODE, GL_LINEAR);		// Fog Mode
+    glFogfv(GL_FOG_COLOR, fogColor);			// Set Fog Color
+    glFogf(GL_FOG_DENSITY, 0.15f);				// How Dense Will The Fog Be
+    glHint(GL_FOG_HINT, GL_NICEST);			// Fog Hint Value
+    glFogf(GL_FOG_START, 10.0f);				// Fog Start Depth
+    glFogf(GL_FOG_END, 50.0f);				// Fog End Depth
+    glEnable(GL_FOG);					// Enables GL_FOG
+
+    LoadGLTextures();
+    r = new Robot(numlink,dh,texture);
+
 }
 
 void drawFloor() {
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+
+    
     double size = 100.0;
     glBegin(GL_QUADS);
     glNormal3f(0.0, 1.0, 0.0);
-    glVertex3d(-size,0,size);
-    glVertex3d(-size,0,-size);
-    glVertex3d(size,0,-size);
+    glTexCoord2f(0,0);
     glVertex3d(size,0,size);
+    glTexCoord2f(0,500);
+    glVertex3d(size,0,-size);
+    glTexCoord2f(500,500);
+    glVertex3d(-size,0,-size);
+    glTexCoord2f(500,0);
+    glVertex3d(-size,0,size);
     glEnd();    
 }
 

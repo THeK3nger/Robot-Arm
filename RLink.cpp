@@ -35,6 +35,7 @@ void RLink::draw() {
             // Draw first sphere.
             glPushMatrix();
                 glScaled(0.7,0.7,0.7);
+                enableSphereTexture();
                 glutSolidSphere(1,20,20);
             glPopMatrix();
 
@@ -42,6 +43,7 @@ void RLink::draw() {
             glPushMatrix();
                 glTranslated(0,0,(this->dhm->d) / 2);
                 glScaled(0.7,0.7,this->dhm->d);
+                enablePrismaTexture();
                 glutSolidCube(1);
             glPopMatrix();
         glPopMatrix();
@@ -59,6 +61,7 @@ void RLink::draw() {
         glPushMatrix();
             glTranslated(-(this->dhm->a),0,0);
             glScaled(0.7,0.7,0.7);
+            enableSphereTexture();
             glutSolidSphere(1,20,20);
         glPopMatrix();
 
@@ -66,6 +69,7 @@ void RLink::draw() {
         glPushMatrix();
             glTranslated(-(this->dhm->a) / 2,0,0);
             glScaled(this->dhm->a,0.7,0.7);
+            enablePrismaTexture();
             glutSolidCube(1);
         glPopMatrix();
     }
@@ -84,4 +88,18 @@ double RLink::getQ() {
 
 void RLink::setTextures(GLuint* textures) {
     this->textures = textures;
+}
+
+void RLink::enableSphereTexture() {
+    glBindTexture(GL_TEXTURE_2D, this->textures[0]);
+    
+    glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
+    glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
+}
+
+void RLink::enablePrismaTexture() {
+    glBindTexture(GL_TEXTURE_2D, this->textures[1]);
+    
+    glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
+    glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
 }
