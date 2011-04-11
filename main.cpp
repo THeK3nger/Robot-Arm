@@ -33,7 +33,7 @@ using namespace std;
 
 float cameray = 5;
 float camerax = 0;
-float cameraz = -25;
+float cameraz = -15;
 
 float cameraangle = 0;
 
@@ -73,30 +73,31 @@ void LoadGLTextures() {
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
     
     // Create Texture	
-    glGenTextures(2, &texture[0]);
+    glGenTextures(3, &texture[0]);
     glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+
 
     // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
     // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image1->getX(), image1->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image1->getData());
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
     glBindTexture(GL_TEXTURE_2D, texture[1]); 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
 
     glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
     
     delete image1;
     delete image2;
@@ -106,11 +107,11 @@ void LoadGLTextures() {
 void init(){
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
     GLfloat mat_shininess[] = { 25.0};
-    GLfloat light_position[] = { 20.0, 20.0, 20.0, 1.0};
+    GLfloat light_position[] = { 20.0, 20.0, 20.0, 0.0};
     GLfloat white_light[] = { 1, 1, 1, 1.0 };
-    GLfloat lmodel_ambient[] = { 1, 1, 1, 1.0 };
+    //GLfloat lmodel_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
     
-    glClearColor(0.5,0.5,1.0,1.0);
+    glClearColor(0.8,0.8,0.8,1.0);
     glClearDepth(1.0); 
     glShadeModel(GL_SMOOTH);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -118,7 +119,7 @@ void init(){
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
     glLightfv(GL_LIGHT0, GL_SPECULAR, white_light);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
     
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -126,17 +127,19 @@ void init(){
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
-    glEnable(GL_CULL_FACE);	
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_FOG);	
+    glDepthMask(GL_TRUE);
     
-    //FOG					// Which Fog To Use
-    GLfloat fogColor[4]= {0.5f, 0.5f, 1.0f, 1.0f};		// Fog Color
-    glFogi(GL_FOG_MODE, GL_LINEAR);		// Fog Mode
+    //FOG                                               // Which Fog To Use
+    GLfloat fogColor[4]= {0.8f, 0.8f, 0.8f, 1.0f};	// Fog Color
+    glFogi(GL_FOG_MODE, GL_LINEAR);                     // Fog Mode
     glFogfv(GL_FOG_COLOR, fogColor);			// Set Fog Color
-    glFogf(GL_FOG_DENSITY, 0.15f);				// How Dense Will The Fog Be
-    glHint(GL_FOG_HINT, GL_NICEST);			// Fog Hint Value
-    glFogf(GL_FOG_START, 10.0f);				// Fog Start Depth
-    glFogf(GL_FOG_END, 50.0f);				// Fog End Depth
-    glEnable(GL_FOG);					// Enables GL_FOG
+    glFogf(GL_FOG_DENSITY, 0.3f);                       // How Dense Will The Fog Be
+    glHint(GL_FOG_HINT, GL_DONT_CARE);			// Fog Hint Value
+    glFogf(GL_FOG_START,10.0f);				// Fog Start Depth
+    glFogf(GL_FOG_END, 40.0f);				// Fog End Depth
+    				// Enables GL_FOG
 
     LoadGLTextures();
     r = new Robot(numlink,dh,texture);
@@ -145,18 +148,17 @@ void init(){
 
 void drawFloor() {
     glBindTexture(GL_TEXTURE_2D, texture[2]);
-
     
-    double size = 100.0;
+    double size = 20.0;
     glBegin(GL_QUADS);
     glNormal3f(0.0, 1.0, 0.0);
     glTexCoord2f(0,0);
     glVertex3d(size,0,size);
-    glTexCoord2f(0,500);
+    glTexCoord2f(0,1);
     glVertex3d(size,0,-size);
-    glTexCoord2f(500,500);
+    glTexCoord2f(1,1);
     glVertex3d(-size,0,-size);
-    glTexCoord2f(500,0);
+    glTexCoord2f(1,0);
     glVertex3d(-size,0,size);
     glEnd();    
 }
@@ -184,7 +186,7 @@ void reshape(int w, int h) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective(30.0,(GLsizei) w/(GLsizei) h, 0.1, 100);
+    gluPerspective(60.0,(GLsizei) w/(GLsizei) h, 0.1, 100);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -252,7 +254,7 @@ void keycontrol(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
 
     glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(500,500);
     glutInitWindowPosition(100,100);
     glutCreateWindow("ROBOT ARMS v0.1");
