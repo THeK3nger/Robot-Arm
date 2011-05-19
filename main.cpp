@@ -130,6 +130,7 @@ void init(){
     glEnable(GL_CULL_FACE);
     glEnable(GL_FOG);	
     glDepthMask(GL_TRUE);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     
     //FOG                                               // Which Fog To Use
     GLfloat fogColor[4]= {0.8f, 0.8f, 0.8f, 1.0f};	// Fog Color
@@ -165,6 +166,11 @@ void drawFloor() {
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+   glColor4f(0.0,0.0,1.0,1.0);
+    glRasterPos2f(0,0);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'c');
+    
     glLoadIdentity();    
     glPushMatrix();
     gluLookAt(camerax,cameray,cameraz,camerax,cameray,cameraz + 5,0,1,0);
@@ -176,7 +182,14 @@ void display(void){
     
     // END OBJECT
     glPopMatrix();
+    
+ 
+    //glRasterPos3d(8,10,10);
+    //glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'i');
+    
     glFlush();
+    
+    
     
     glutSwapBuffers();
 }
@@ -185,9 +198,7 @@ void reshape(int w, int h) {
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-
     gluPerspective(60.0,(GLsizei) w/(GLsizei) h, 0.1, 100);
-    
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
