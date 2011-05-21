@@ -1,6 +1,6 @@
 /* 
  * File:   BMPImage.h
- * Author: kratux
+ * Author: Davide Aversa
  *
  * Created on April 6, 2011, 4:47 PM
  */
@@ -14,8 +14,20 @@ public:
     BMPImage(const BMPImage& orig);
     virtual ~BMPImage();
     
+    /**
+     * Load a bitmap image.
+     *
+     * ARGS:
+     *  * filename : Path to file.
+     */
     int loadImage(char *filename);
+    
+    /**
+     * Get Image Data
+     */
     char* getData();
+
+    // Get height and width.
     unsigned long getX();
     unsigned long getY();
     

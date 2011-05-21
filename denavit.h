@@ -1,6 +1,6 @@
 /* 
  * File:   denavit.h
- * Author: kratux
+ * Author: Davide Aversa
  *
  * Created on March 30, 2011, 8:00 PM
  */
@@ -10,8 +10,8 @@
 
 typedef struct {
     double* matrix; // 4x4 matrix representing DH-Transformation for a 
-    double a;           // link in column-major order with parameters
-    double alpha;       // a, alpha, d and theta.
+    double a;       // link in column-major order with parameters
+    double alpha;   // a, alpha, d and theta.
     double d;
     double theta;
 } dhmatrix;

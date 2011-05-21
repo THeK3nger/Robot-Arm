@@ -1,6 +1,6 @@
 /* 
  * File:   RLink.h
- * Author: kratux
+ * Author: Davide Aversa
  *
  * Created on March 30, 2011, 9:47 PM
  */
@@ -15,7 +15,6 @@ class RLink {
     /**
      * This class models a link with a Revolute Joint according to 
      * Denavit-Hartenberg convention.
-     * 
      */
     
     
