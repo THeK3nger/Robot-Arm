@@ -48,6 +48,11 @@ public:
      */
     void updateQ(double newq);
     
+    /**
+     * Setter for 'qdot'
+     */
+    void updateQDot(double newqdot);
+    
     void update();
     void draw();
     
@@ -60,6 +65,7 @@ private:
     dhmatrix* dhm; // Pointer to a transformation matrix for this link.
     double qvalue; // Value of joint variable.
     GLuint* textures; // Textures Array.
+    double qdot;
     
     void enableSphereTexture();
     void enablePrismaTexture();

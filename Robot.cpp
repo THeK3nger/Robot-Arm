@@ -70,3 +70,9 @@ void Robot::drawEndEffector() {
     glutSolidCone(0.4,2,20,20);
     glPopMatrix();
 }
+
+void Robot::update() {
+    for (int i=0;i<this->numlink;i++) {
+        this->linklist[i]->update();
+    }
+}

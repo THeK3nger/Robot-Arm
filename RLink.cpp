@@ -103,3 +103,11 @@ void RLink::enablePrismaTexture() {
     glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
     glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
 }
+
+void RLink::updateQDot(double newqdot) {
+    this->qdot = newqdot;
+}
+
+void RLink::update() {
+    this->updateQ(this->qvalue + this->qdot * 0.1);  
+}
