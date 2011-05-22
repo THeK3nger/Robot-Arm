@@ -12,11 +12,13 @@
 RLink::RLink(double a, double alpha, double d, double teta) {
     this->dhm = createMatrix(a,alpha,d,teta);
     this->qvalue = teta;
+    this->qdot = 0.1;
 }
 
 RLink::RLink(double* parameters){
     this->dhm = createMatrix(parameters);
     this->qvalue = parameters[3];
+    this->qdot = 0.1;
 }
 
 RLink::RLink(const RLink& orig) {

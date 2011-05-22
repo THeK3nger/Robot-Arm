@@ -20,7 +20,6 @@
 #define pi2 11.0/7.0
 
 //TODO: Floor.
-//TODO: Textures.
 //TODO: Refining Command.
 //TODO: User interface with info about.
 //TODO (Optional) : Automatic Mobility?
@@ -167,7 +166,7 @@ void drawFloor() {
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-   glColor4f(0.0,0.0,1.0,1.0);
+    glColor4f(0.0,0.0,1.0,1.0);
     glRasterPos2f(0,0);
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'c');
     
@@ -178,6 +177,7 @@ void display(void){
     // OBJECT DRAWING
     
     drawFloor();
+    r->update();
     r->draw();
     
     // END OBJECT
@@ -201,6 +201,11 @@ void reshape(int w, int h) {
     gluPerspective(60.0,(GLsizei) w/(GLsizei) h, 0.1, 100);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+void idle() {
+  r->update();
+  glutPostRedisplay();
 }
 
 #define STEP 0.1
@@ -270,6 +275,7 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(100,100);
     glutCreateWindow("ROBOT ARMS v0.1");
     init();
+    glutIdleFunc(idle);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keycontrol);
