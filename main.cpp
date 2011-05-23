@@ -5,18 +5,22 @@
  * Created on March 30, 2011, 7:58 PM
  */
 
+/* C/C++ Standard Includes */
 #include <cstdlib>
 #include <iostream>
 #include <stdio.h>
 
+/* OpenGL/GLUT Includes */
 #include <GL/glut.h>
 #include <GL/gl.h>
 
+/* RobotArm Includes */
 #include "denavit.h"
 #include "RLink.h"
 #include "Robot.h"
 #include "BMPImage.h"
 
+/* Constant */
 #define pi2 11.0/7.0
 
 //TODO: Floor.
@@ -26,9 +30,7 @@
 
 using namespace std;
 
-/*
- * GLOBAL VARIABLE
- */
+/* GLOBAL VARIABLE */
 
 float cameray = 5;
 float camerax = 0;
@@ -39,7 +41,7 @@ float cameraangle = 0;
 int linksel = 0;
 int numlink = 5;
 
-double dh[] =   {0,pi2,5.0,1,
+double dh[] =  {0,pi2,5.0,1,
                 0,pi2,0,1,
                 0,pi2,5,1,
                 0,pi2,0,1,
@@ -51,6 +53,8 @@ GLuint texture[3];
 static GLfloat xequalzero[] = {1.0, 0.0, 0.0, 0.0};
 static GLfloat slanted[] = {1.0, 1.0, 1.0, 0.0};
 
+/* *** */
+
 void LoadGLTextures() {	
     // Load Texture
     BMPImage *image1 = new BMPImage();
@@ -58,15 +62,15 @@ void LoadGLTextures() {
     BMPImage *image3 = new BMPImage();
 
     if (!image1->loadImage("./res/copper.bmp")) {
-	exit(1);
+      exit(1);
     }       
     
     if (!image2->loadImage("./res/zink.bmp")) {
-	exit(1);
+      exit(1);
     }
     
     if (!image3->loadImage("./res/grass.bmp")) {
-	exit(1);
+      exit(1);
     }  
 
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
@@ -86,15 +90,15 @@ void LoadGLTextures() {
 
     glBindTexture(GL_TEXTURE_2D, texture[1]); 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
     glBindTexture(GL_TEXTURE_2D, texture[2]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
     
@@ -104,11 +108,11 @@ void LoadGLTextures() {
 };
 
 void init(){
+    /* Material and lights */
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
     GLfloat mat_shininess[] = { 25.0};
     GLfloat light_position[] = { 20.0, 20.0, 20.0, 0.0};
     GLfloat white_light[] = { 1, 1, 1, 1.0 };
-    //GLfloat lmodel_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
     
     glClearColor(0.8,0.8,0.8,1.0);
     glClearDepth(1.0); 
@@ -118,8 +122,8 @@ void init(){
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, white_light);
     glLightfv(GL_LIGHT0, GL_SPECULAR, white_light);
-    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
     
+    /* Enable */
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
@@ -131,15 +135,14 @@ void init(){
     glDepthMask(GL_TRUE);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     
-    //FOG                                               // Which Fog To Use
+    /* Fog */
     GLfloat fogColor[4]= {0.8f, 0.8f, 0.8f, 1.0f};	// Fog Color
-    glFogi(GL_FOG_MODE, GL_LINEAR);                     // Fog Mode
-    glFogfv(GL_FOG_COLOR, fogColor);			// Set Fog Color
-    glFogf(GL_FOG_DENSITY, 0.3f);                       // How Dense Will The Fog Be
-    glHint(GL_FOG_HINT, GL_DONT_CARE);			// Fog Hint Value
-    glFogf(GL_FOG_START,10.0f);				// Fog Start Depth
-    glFogf(GL_FOG_END, 40.0f);				// Fog End Depth
-    				// Enables GL_FOG
+    glFogi(GL_FOG_MODE, GL_LINEAR);                 // Fog Mode
+    glFogfv(GL_FOG_COLOR, fogColor);			          // Set Fog Color
+    glFogf(GL_FOG_DENSITY, 0.3f);                   // How Dense Will The Fog Be
+    glHint(GL_FOG_HINT, GL_DONT_CARE);			        // Fog Hint Value
+    glFogf(GL_FOG_START,10.0f);				              // Fog Start Depth
+    glFogf(GL_FOG_END, 40.0f);				              // Fog End Depth
 
     LoadGLTextures();
     r = new Robot(numlink,dh,texture);
@@ -151,46 +154,44 @@ void drawFloor() {
     
     double size = 20.0;
     glBegin(GL_QUADS);
-    glNormal3f(0.0, 1.0, 0.0);
-    glTexCoord2f(0,0);
-    glVertex3d(size,0,size);
-    glTexCoord2f(0,1);
-    glVertex3d(size,0,-size);
-    glTexCoord2f(1,1);
-    glVertex3d(-size,0,-size);
-    glTexCoord2f(1,0);
-    glVertex3d(-size,0,size);
+      glNormal3f(0.0, 1.0, 0.0);
+      glTexCoord2f(0,0);
+      glVertex3d(size,0,size);
+      glTexCoord2f(0,1);
+      glVertex3d(size,0,-size);
+      glTexCoord2f(1,1);
+      glVertex3d(-size,0,-size);
+      glTexCoord2f(1,0);
+      glVertex3d(-size,0,size);
     glEnd();    
 }
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glColor4f(0.0,0.0,1.0,1.0);
-    glRasterPos2f(0,0);
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'c');
     
+    glColor4f(0.0,0.0,1.0,1.0);
+    //glRasterPos2f(0,0);
+    //glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'c');
+    
+    /* Camera Trasformation */
     glLoadIdentity();    
     glPushMatrix();
     gluLookAt(camerax,cameray,cameraz,camerax,cameray,cameraz + 5,0,1,0);
     glRotated(cameraangle, 0, 1, 0);
-    // OBJECT DRAWING
     
+    /* Drawing Object */
     drawFloor();
     r->update();
     r->draw();
     
-    // END OBJECT
+    /* Pop Matrix */
     glPopMatrix();
     
- 
     //glRasterPos3d(8,10,10);
     //glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'i');
     
     glFlush();
-    
-    
-    
     glutSwapBuffers();
 }
 
@@ -204,7 +205,7 @@ void reshape(int w, int h) {
 }
 
 void idle() {
-  r->update();
+  r->update(); /* Update qvalue of robot joints. */
   glutPostRedisplay();
 }
 
@@ -265,7 +266,7 @@ void keycontrol(unsigned char key, int x, int y) {
 }
 
 /*
- * 
+ * MAIN
  */
 int main(int argc, char** argv) {
 

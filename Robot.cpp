@@ -1,6 +1,6 @@
 /* 
  * File:   Robot.cpp
- * Author: kratux
+ * Author: Davide Aversa
  * 
  * Created on March 30, 2011, 9:44 PM
  */
