@@ -28,6 +28,8 @@ RLink::~RLink() {
 }
 
 void RLink::draw() {
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
     
     // ONLY IF D != 0.
     if (this->dhm->d != 0) {  
@@ -76,6 +78,8 @@ void RLink::draw() {
         glPopMatrix();
     }
     
+    glDisable(GL_TEXTURE_GEN_S);
+    glDisable(GL_TEXTURE_GEN_T);
 } 
 
 void RLink::updateQ(double newq) {

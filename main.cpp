@@ -71,7 +71,7 @@ void LoadGLTextures() {
       exit(1);
     }
     
-    if (!image3->loadImage("./res/zink.bmp")) {
+    if (!image3->loadImage("./res/chess.bmp")) {
       exit(1);
     }  
     
@@ -131,8 +131,6 @@ void init(){
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_TEXTURE_GEN_S);
-    glEnable(GL_TEXTURE_GEN_T);
     glEnable(GL_CULL_FACE);
     glEnable(GL_FOG);	
     glDepthMask(GL_TRUE);
@@ -156,15 +154,16 @@ void drawFloor() {
     glBindTexture(GL_TEXTURE_2D, texture[2]);
     
     double size = 20.0;
+    double txsize = 5.0;
     glBegin(GL_QUADS);
       glNormal3f(0.0, 1.0, 0.0);
       glTexCoord2f(0,0);
       glVertex3d(size,0,size);
-      glTexCoord2f(0,size);
+      glTexCoord2f(0,txsize);
       glVertex3d(size,0,-size);
-      glTexCoord2f(size,size);
+      glTexCoord2f(txsize,txsize);
       glVertex3d(-size,0,-size);
-      glTexCoord2f(size,0);
+      glTexCoord2f(txsize,0);
       glVertex3d(-size,0,size);
     glEnd();    
 }
