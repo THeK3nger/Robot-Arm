@@ -1,5 +1,7 @@
 # Robot Arm v. 0.1
 
+RobotArm is a 3D simulation of a robotic arm. The model was build throught the Denavit-Hartenberg table.
+
 ## Dependence
 
 * OpenGL
