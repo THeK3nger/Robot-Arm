@@ -1,6 +1,6 @@
 /* 
  * File:   BMPImage.cpp
- * Author: kratux
+ * Author: Davide Aversa
  * 
  * Created on April 6, 2011, 4:47 PM
  */

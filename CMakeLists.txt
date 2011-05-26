@@ -13,4 +13,4 @@ target_link_libraries(robotarm ${OPENGL_LIBRARY} ${GLUT_LIBRARY})
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/res
 
-     ${CMAKE_BINARY_DIR}/res)
+    ${CMAKE_BINARY_DIR}/res)
