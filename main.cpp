@@ -36,6 +36,8 @@ float cameray = 5;
 float camerax = 0;
 float cameraz = -15;
 
+float animation = 1;
+
 float cameraangle = 0;
 
 int linksel = 0;
@@ -182,14 +184,10 @@ void display(void){
     
     /* Drawing Object */
     drawFloor();
-    r->update();
     r->draw();
     
     /* Pop Matrix */
     glPopMatrix();
-    
-    //glRasterPos3d(8,10,10);
-    //glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'i');
     
     glFlush();
     glutSwapBuffers();
@@ -259,6 +257,16 @@ void keycontrol(unsigned char key, int x, int y) {
         case 'o':
             r->updateQ(linksel,r->getQ(linksel) - 0.1);
             glutPostRedisplay();
+            break;
+        case ' ':
+            if (animation == 1) {
+                glutIdleFunc(0);
+                animation = 0;
+            }
+            else {
+                glutIdleFunc(idle);
+                animation = 1;
+            }
             break;
         default:
             break;
