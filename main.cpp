@@ -71,38 +71,40 @@ void LoadGLTextures() {
       exit(1);
     }
     
-    if (!image3->loadImage("./res/grass.bmp")) {
+    if (!image3->loadImage("./res/zink.bmp")) {
       exit(1);
     }  
+    
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
     
     // Create Texture	
     glGenTextures(3, &texture[0]);
     glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
-
-
     // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
     // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image1->getX(), image1->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image1->getData());
+    
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image1->getX(), image1->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image1->getData());
 
     glBindTexture(GL_TEXTURE_2D, texture[1]); 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image2->getX(), image2->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image2->getData());
 
     glBindTexture(GL_TEXTURE_2D, texture[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_R,GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image3->getX(), image3->getY(), 0, GL_RGB, GL_UNSIGNED_BYTE, image3->getData());
     
     delete image1;
     delete image2;
@@ -140,11 +142,11 @@ void init(){
     /* Fog */
     GLfloat fogColor[4]= {0.8f, 0.8f, 0.8f, 1.0f};	// Fog Color
     glFogi(GL_FOG_MODE, GL_LINEAR);                 // Fog Mode
-    glFogfv(GL_FOG_COLOR, fogColor);			          // Set Fog Color
+    glFogfv(GL_FOG_COLOR, fogColor);			    // Set Fog Color
     glFogf(GL_FOG_DENSITY, 0.3f);                   // How Dense Will The Fog Be
-    glHint(GL_FOG_HINT, GL_DONT_CARE);			        // Fog Hint Value
-    glFogf(GL_FOG_START,10.0f);				              // Fog Start Depth
-    glFogf(GL_FOG_END, 40.0f);				              // Fog End Depth
+    glHint(GL_FOG_HINT, GL_DONT_CARE);			    // Fog Hint Value
+    glFogf(GL_FOG_START,10.0f);				        // Fog Start Depth
+    glFogf(GL_FOG_END, 40.0f);				        // Fog End Depth
 
     LoadGLTextures();
     r = new Robot(numlink,dh,texture);
@@ -159,17 +161,18 @@ void drawFloor() {
       glNormal3f(0.0, 1.0, 0.0);
       glTexCoord2f(0,0);
       glVertex3d(size,0,size);
-      glTexCoord2f(0,1);
+      glTexCoord2f(0,size);
       glVertex3d(size,0,-size);
-      glTexCoord2f(1,1);
+      glTexCoord2f(size,size);
       glVertex3d(-size,0,-size);
-      glTexCoord2f(1,0);
+      glTexCoord2f(size,0);
       glVertex3d(-size,0,size);
     glEnd();    
 }
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
     
     
     glColor4f(0.0,0.0,1.0,1.0);
