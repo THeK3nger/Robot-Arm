@@ -54,9 +54,6 @@ Robot* r;
 
 GLuint texture[3];
 
-static GLfloat xequalzero[] = {1.0, 0.0, 0.0, 0.0};
-static GLfloat slanted[] = {1.0, 1.0, 1.0, 0.0};
-
 /* *** */
 
 void LoadGLTextures() {	
@@ -114,18 +111,6 @@ void LoadGLTextures() {
     delete image3;
     PRINTLN("-------------------");
 };
-
-void drawSquare() {
-    double size = 1.0;
-    double txsize = 5.0;
-    glBegin(GL_QUADS);
-      glVertex3d(size,size,0);
-      glVertex3d(size,-size,0);
-      glVertex3d(-size,-size,0);
-      glVertex3d(-size,size,0);
-    glEnd();  
-    
-}
 
 void init(){
     /* Material and lights */
@@ -189,10 +174,7 @@ void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
     
-    
     glColor4f(0.0,0.0,1.0,1.0);
-    //glRasterPos2f(0,0);
-    //glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,'c');
     
     /* Camera Trasformation */
     glLoadIdentity();    

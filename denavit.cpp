@@ -15,7 +15,6 @@ dhmatrix* createMatrix(double a, double alpha, double d, double theta)
     result->theta = theta;
     
     //Print Parameters for Debug
-    //cout << a << " - " << alpha << " - " << d << " - " << theta << endl;
             
     // First Row
     result->matrix[0] = cos(theta);

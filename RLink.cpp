@@ -55,9 +55,6 @@ void RLink::draw() {
     
     // Go to next frame.
     glMultMatrixd(this->dhm->matrix);
-    //glTranslated(0,0,this->dhm->d);
-    //glRotated((this->dhm->alpha * 180)/3.1416,0,1,0);
-    //glTranslated(0,0,this->dhm->a);
     
     // ONLY IF A != 0
     if (this->dhm->a != 0) {
