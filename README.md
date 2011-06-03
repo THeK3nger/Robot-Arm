@@ -25,3 +25,12 @@ TODO
 ## How to run
 
 In the build directory run `./robotarm`.
+
+## Controll
+
+In *Robot Arm* you can use the following control key:
+
+* `a/d` - Turn the camera around the robot clockwise/counterclockwise. 
+* `+/-` - Change the selected joint.
+* `o/p` - Change the q-value of the selected joint.
+* `SPACE` - Start/Stop the animation.
