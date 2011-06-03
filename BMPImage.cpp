@@ -28,7 +28,7 @@ int BMPImage::loadImage(char *filename) {
     // make sure the file is there.
     if ((file = fopen(filename, "rb"))==NULL)
     {
-	printf("File Not Found : %s\n",filename);
+	printf("\tFile Not Found : %s\n",filename);
 	return 0;
     }
     
@@ -37,38 +37,38 @@ int BMPImage::loadImage(char *filename) {
 
     // read the width
     if ((i = fread(&this->sizeX, 4, 1, file)) != 1) {
-	printf("Error reading width from %s.\n", filename);
+	printf("\tError reading width from %s.\n", filename);
 	return 0;
     }
-    printf("Width of %s: %lu\n", filename, this->sizeX);
+    printf("\tWidth of %s: %lu\n", filename, this->sizeX);
     
     // read the height 
     if ((i = fread(&this->sizeY, 4, 1, file)) != 1) {
 	printf("Error reading height from %s.\n", filename);
 	return 0;
     }
-    printf("Height of %s: %lu\n", filename, this->sizeY);
+    printf("\tHeight of %s: %lu\n", filename, this->sizeY);
     
     // calculate the size (assuming 24 bits or 3 bytes per pixel).
     size = this->sizeX * this->sizeY * 3;
 
     // read the planes
     if ((fread(&planes, 2, 1, file)) != 1) {
-	printf("Error reading planes from %s.\n", filename);
+	printf("\tError reading planes from %s.\n", filename);
 	return 0;
     }
     if (planes != 1) {
-	printf("Planes from %s is not 1: %u\n", filename, planes);
+	printf("\tPlanes from %s is not 1: %u\n", filename, planes);
 	return 0;
     }
 
     // read the bpp
     if ((i = fread(&bpp, 2, 1, file)) != 1) {
-	printf("Error reading bpp from %s.\n", filename);
+	printf("\tError reading bpp from %s.\n", filename);
 	return 0;
     }
     if (bpp != 24) {
-	printf("Bpp from %s is not 24: %u\n", filename, bpp);
+	printf("\tBpp from %s is not 24: %u\n", filename, bpp);
 	return 0;
     }
 	
@@ -78,12 +78,12 @@ int BMPImage::loadImage(char *filename) {
     // read the data. 
     this->data = new char[size];
     if (this->data == NULL) {
-	printf("Error allocating memory for color-corrected image data");
+	printf("\tError allocating memory for color-corrected image data");
 	return 0;	
     }
 
     if ((i = fread(this->data, size, 1, file)) != 1) {
-	printf("Error reading image data from %s.\n", filename);
+	printf("\tError reading image data from %s.\n", filename);
 	return 0;
     }
 

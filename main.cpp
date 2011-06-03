@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: kratux
+ * Author: Davide Aversa
  *
  * Created on March 30, 2011, 7:58 PM
  */
@@ -23,8 +23,10 @@
 /* Constant */
 #define pi2 11.0/7.0
 
-//TODO: Floor.
-//TODO: Refining Command.
+/* Macros */
+#define PRINT(x)   cout << (x)
+#define PRINTLN(x) cout << (x) << endl
+
 //TODO: User interface with info about.
 //TODO (Optional) : Automatic Mobility?
 
@@ -59,6 +61,8 @@ static GLfloat slanted[] = {1.0, 1.0, 1.0, 0.0};
 
 void LoadGLTextures() {	
     // Load Texture
+    PRINTLN("Loading Textures...");
+    PRINTLN("-------------------");
     BMPImage *image1 = new BMPImage();
     BMPImage *image2 = new BMPImage();
     BMPImage *image3 = new BMPImage();
@@ -108,7 +112,20 @@ void LoadGLTextures() {
     delete image1;
     delete image2;
     delete image3;
+    PRINTLN("-------------------");
 };
+
+void drawSquare() {
+    double size = 1.0;
+    double txsize = 5.0;
+    glBegin(GL_QUADS);
+      glVertex3d(size,size,0);
+      glVertex3d(size,-size,0);
+      glVertex3d(-size,-size,0);
+      glVertex3d(-size,size,0);
+    glEnd();  
+    
+}
 
 void init(){
     /* Material and lights */
@@ -117,7 +134,7 @@ void init(){
     GLfloat light_position[] = { 20.0, 20.0, 20.0, 0.0};
     GLfloat white_light[] = { 1, 1, 1, 1.0 };
     
-    glClearColor(0.8,0.8,0.8,1.0);
+    glClearColor(0.8,0.8,1.0,1.0);
     glClearDepth(1.0); 
     glShadeModel(GL_SMOOTH);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -137,7 +154,7 @@ void init(){
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     
     /* Fog */
-    GLfloat fogColor[4]= {0.8f, 0.8f, 0.8f, 1.0f};	// Fog Color
+    GLfloat fogColor[4]= {0.8f, 0.8f, 1.0f, 1.0f};	// Fog Color
     glFogi(GL_FOG_MODE, GL_LINEAR);                 // Fog Mode
     glFogfv(GL_FOG_COLOR, fogColor);			    // Set Fog Color
     glFogf(GL_FOG_DENSITY, 0.3f);                   // How Dense Will The Fog Be
@@ -212,36 +229,12 @@ void idle() {
 
 void keycontrol(unsigned char key, int x, int y) {
     switch (key) {
-        case 'w' :
-            cameraz = cameraz + STEP;
-            glutPostRedisplay();
-            break;
-        case 's' :
-            cameraz = cameraz - STEP;
-            glutPostRedisplay();
-            break;
-        case 'a' :
-            camerax = camerax + STEP;
-            glutPostRedisplay();
-            break;
-        case 'd':
-            camerax = camerax - STEP;
-            glutPostRedisplay();
-            break;
-        case 'q' :
+        case 'd' :
             cameraangle = cameraangle - (STEP*10);
             glutPostRedisplay();
             break;
-        case 'e' :
+        case 'a' :
             cameraangle = cameraangle + (STEP*10);
-            glutPostRedisplay();
-            break;
-        case 'r' :
-            cameray = cameray + STEP;
-            glutPostRedisplay();
-            break;
-        case 'f':
-            cameray = cameray - STEP;
             glutPostRedisplay();
             break;
         case '+':
@@ -274,16 +267,25 @@ void keycontrol(unsigned char key, int x, int y) {
     }
 }
 
+void header()
+{
+    PRINTLN("---------- ROBOT ARM v1.0 ----------");
+    PRINTLN("Developed by Davide Aversa.");
+    PRINTLN("-----------");
+}
+
 /*
  * MAIN
  */
 int main(int argc, char** argv) {
-
+    header();
+    PRINTLN("Starting Robot Arm...");
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(500,500);
     glutInitWindowPosition(100,100);
     glutCreateWindow("ROBOT ARMS v0.1");
+    PRINTLN("Initializing...");
     init();
     glutIdleFunc(idle);
     glutDisplayFunc(display);
