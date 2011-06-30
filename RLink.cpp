@@ -102,9 +102,6 @@ void RLink::enableSphereTexture() {
 
 void RLink::enablePrismaTexture() {
     glBindTexture(GL_TEXTURE_2D, 0);
-    
-    //glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
-    //glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
 }
 
 void RLink::updateQDot(double newqdot) {

@@ -36,6 +36,7 @@ void Robot::draw() {
         this->linklist[i]->draw();
     }    
     
+    glRotated(1.9,1,1,0);
     this->drawEndEffector();
     
     glPopMatrix();

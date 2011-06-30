@@ -7,6 +7,8 @@
 
 #include "BMPImage.h"
 #include <stdio.h>
+#include <string>
+using namespace std;
 
 BMPImage::BMPImage() {
 }
@@ -17,13 +19,14 @@ BMPImage::BMPImage(const BMPImage& orig) {
 BMPImage::~BMPImage() {
 }
 
-int BMPImage::loadImage(char *filename) {
+int BMPImage::loadImage(string strfilename) {
     FILE *file;
     unsigned long size;                 // size of the image in bytes.
     unsigned long i;                    // standard counter.
     unsigned short int planes;          // number of planes in image (must be 1) 
     unsigned short int bpp;             // number of bits per pixel (must be 24)
     char temp;                          // temporary color storage for bgr-rgb conversion.
+    const char *filename = strfilename.c_str();
 
     // make sure the file is there.
     if ((file = fopen(filename, "rb"))==NULL)

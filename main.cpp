@@ -22,42 +22,55 @@
 
 /* Constant */
 #define pi2 11.0/7.0
+#define ANIMATION_ON 0
+#define ANIMATION_OFF 1
+#define STEP 0.1
+#define WINDOWS_SIZE 500
+#define WINDOWS_X_POSITION 100
+#define WINDOWS_Y_POSITION 100
+#define NO_FUNCTION 0
 
 /* Macros */
 #define PRINT(x)   cout << (x)
 #define PRINTLN(x) cout << (x) << endl
 
-//TODO: User interface with info about.
-//TODO (Optional) : Automatic Mobility?
-
 using namespace std;
 
 /* GLOBAL VARIABLE */
 
+/* Camera Position */ 
 float cameray = 5;
 float camerax = 0;
 float cameraz = -15;
 
-float animation = 1;
+/* Animation in on? */
+float animation = ANIMATION_ON;
 
+/* Current Camera Angle */
 float cameraangle = 0;
 
+/* Current Link */
 int linksel = 0;
-int numlink = 5;
 
+/* TABELLA DH [a alpha d theta] */
+
+int numlink = 5;
 double dh[] =  {0,pi2,5.0,1,
                 0,pi2,0,1,
                 0,pi2,5,1,
                 0,pi2,0,1,
                 0,0,5,1};
+
+/* Robot Structure */
 Robot* r;
 
+/* Textures Buffer */
 GLuint texture[3];
 
 /* *** */
 
 void LoadGLTextures() {	
-    // Load Texture
+    // Load Three Textures From File!
     PRINTLN("Loading Textures...");
     PRINTLN("-------------------");
     BMPImage *image1 = new BMPImage();
@@ -120,7 +133,7 @@ void init(){
     GLfloat white_light[] = { 1, 1, 1, 1.0 };
     
     glClearColor(0.8,0.8,1.0,1.0);
-    glClearDepth(1.0); 
+    glClearDepth(10.0); 
     glShadeModel(GL_SMOOTH);
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -149,10 +162,13 @@ void init(){
     glFogf(GL_FOG_END, 40.0f);				        // Fog End Depth
 
     LoadGLTextures();
+    
+    /* Create Robot */
     r = new Robot(numlink,dh,texture);
 
 }
 
+/* Draw a simple chess floor. */
 void drawFloor() {
     glBindTexture(GL_TEXTURE_2D, texture[2]);
     
@@ -172,10 +188,9 @@ void drawFloor() {
 }
 
 void display(void){
+    /* Clear Screen */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
-    
-    glColor4f(0.0,0.0,1.0,1.0);
     
     /* Camera Trasformation */
     glLoadIdentity();    
@@ -208,41 +223,43 @@ void idle() {
   glutPostRedisplay();
 }
 
-#define STEP 0.1
-
 void keycontrol(unsigned char key, int x, int y) {
     switch (key) {
-        case 'd' :
+        case 'd' : /* Turn Right */
             cameraangle = cameraangle - (STEP*10);
             glutPostRedisplay();
             break;
-        case 'a' :
+        case 'a' : /* Turn Left */
             cameraangle = cameraangle + (STEP*10);
             glutPostRedisplay();
             break;
-        case '+':
+        case '+': /* Select Next Link */
             linksel = (linksel + 1) % numlink;
             break;
-        case '-':
+        case '-': /* Select Previous Link */
             linksel = (linksel - 1);
             if (linksel<0) linksel = numlink - 1;
             break;
-        case 'p':
-            r->updateQ(linksel,r->getQ(linksel) + 0.1);
-            glutPostRedisplay();
+        case 'p': /* Increment q-value for selected link. */
+            if (animation == ANIMATION_OFF) {
+                r->updateQ(linksel,r->getQ(linksel) + 0.1);
+                glutPostRedisplay();
+            }
             break;
-        case 'o':
-            r->updateQ(linksel,r->getQ(linksel) - 0.1);
-            glutPostRedisplay();
+        case 'o': /* Decrement q-value for selected link. */
+            if (animation == ANIMATION_OFF) {
+                r->updateQ(linksel,r->getQ(linksel) - 0.1);
+                glutPostRedisplay();
+            }
             break;
-        case ' ':
-            if (animation == 1) {
-                glutIdleFunc(0);
-                animation = 0;
+        case ' ': /* Stop and Start animation */
+            if (animation == ANIMATION_ON) {
+                glutIdleFunc(NO_FUNCTION);
+                animation = ANIMATION_OFF;
             }
             else {
                 glutIdleFunc(idle);
-                animation = 1;
+                animation = ANIMATION_ON;
             }
             break;
         default:
@@ -252,7 +269,7 @@ void keycontrol(unsigned char key, int x, int y) {
 
 void header()
 {
-    PRINTLN("---------- ROBOT ARM v1.0 ----------");
+    PRINTLN("---------- ROBOT ARM v1.1 ----------");
     PRINTLN("Developed by Davide Aversa.");
     PRINTLN("-----------");
 }
@@ -265,9 +282,9 @@ int main(int argc, char** argv) {
     PRINTLN("Starting Robot Arm...");
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-    glutInitWindowSize(500,500);
-    glutInitWindowPosition(100,100);
-    glutCreateWindow("ROBOT ARMS v0.1");
+    glutInitWindowSize(WINDOWS_SIZE,WINDOWS_SIZE);
+    glutInitWindowPosition(WINDOWS_X_POSITION,WINDOWS_Y_POSITION);
+    glutCreateWindow("ROBOT ARMS v1.1");
     PRINTLN("Initializing...");
     init();
     glutIdleFunc(idle);
@@ -275,6 +292,6 @@ int main(int argc, char** argv) {
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keycontrol);
     glutMainLoop();
-    return 0;
+    return EXIT_SUCCESS;
 }
 

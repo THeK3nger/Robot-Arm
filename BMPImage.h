@@ -8,6 +8,9 @@
 #ifndef BMPIMAGE_H
 #define	BMPIMAGE_H
 
+#include <string>
+using namespace std;
+
 class BMPImage {
 public:
     BMPImage();
@@ -20,7 +23,7 @@ public:
      * ARGS:
      *  * filename : Path to file.
      */
-    int loadImage(char *filename);
+    int loadImage(string strfilename);
     
     /**
      * Get Image Data
