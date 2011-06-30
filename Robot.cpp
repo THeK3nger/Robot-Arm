@@ -50,12 +50,10 @@ double Robot::getQ(int idlink) {
 }
 
 void Robot::drawEndEffector() {
-    glBindTexture(GL_TEXTURE_2D, this->textures[0]);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
     
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smaller than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, this->textures[0]);
     
     glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
     glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
@@ -69,6 +67,9 @@ void Robot::drawEndEffector() {
     glTranslated(0,-0.5,0);
     glutSolidCone(0.4,2,20,20);
     glPopMatrix();
+    
+    glDisable(GL_TEXTURE_GEN_S);
+    glDisable(GL_TEXTURE_GEN_T);
 }
 
 void Robot::update() {
