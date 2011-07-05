@@ -30,7 +30,7 @@ public:
      * @param dhtable : A matrix representing a DH-Table.
      * @param textures : Textures array.
      */
-    Robot(int numlink, double* dhtable, GLuint* textures);
+    Robot(int numlink, double* dhtable, bool zapproach, GLuint* textures);
     Robot(const Robot& orig);
     virtual ~Robot();
     
@@ -43,6 +43,7 @@ private:
     RLink** linklist;
     int numlink;
     GLuint* textures;
+    bool zapproach;
     
     /**
      * This private method draw the end-effector.

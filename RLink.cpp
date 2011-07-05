@@ -9,6 +9,9 @@
 
 #include "RLink.h"
 
+/* MACRO */
+#define DEG2RAD(X) (((X) * 180)/3.1416)
+
 RLink::RLink(double a, double alpha, double d, double teta) {
     this->dhm = createMatrix(a,alpha,d,teta);
     this->qvalue = teta;
@@ -35,7 +38,7 @@ void RLink::draw() {
     if (this->dhm->d != 0) {  
         glPushMatrix();
             // Pre-rotate by 'q' along z axis
-            glRotated((this->qvalue * 180)/3.1416,0,0,1);
+            glRotated(DEG2RAD(this->qvalue),0,0,1);
             // Draw first sphere.
             glPushMatrix();
                 glScaled(0.7,0.7,0.7);

@@ -10,10 +10,11 @@
 
 #include <GL/freeglut_std.h>
 
-Robot::Robot(int numlink, double* dhtable, GLuint* textures) {
+Robot::Robot(int numlink, double* dhtable, bool zapproach, GLuint* textures) {
     this->linklist = new RLink*[numlink];
     this->numlink = numlink;
     this->textures = textures;
+    this->zapproach = zapproach;
     for (int i=0;i<numlink;++i)
     {
         linklist[i] = new RLink(&dhtable[i*4]);
@@ -29,14 +30,15 @@ Robot::~Robot() {
 
 void Robot::draw() {
     glPushMatrix();
-    GLdouble t[] = {-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1};
+    // This matrix change orientation of axis: Z-up, X-right, Y-oots
+    GLdouble t[] = {-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1}; 
     glMultMatrixd(t);
     
     for (int i=0;i<this->numlink;++i) {
         this->linklist[i]->draw();
     }    
     
-    glRotated(1.9,1,1,0);
+    //glRotated(1.9,1,1,0);
     this->drawEndEffector();
     
     glPopMatrix();
@@ -58,6 +60,11 @@ void Robot::drawEndEffector() {
     
     glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
     glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_OBJECT_LINEAR);
+    
+    if (!this->zapproach) {
+        GLdouble t[] = {0,0,1,0,0,-1,0,0,1,0,0,0,0,0,0,1}; 
+        glMultMatrixd(t);
+    }
     
     glPushMatrix();
     glTranslated(0,0.5,0);

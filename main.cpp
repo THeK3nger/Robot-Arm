@@ -54,12 +54,33 @@ int linksel = 0;
 
 /* TABELLA DH [a alpha d theta] */
 
-int numlink = 5;
-double dh[] =  {0,pi2,5.0,1,
-                0,pi2,0,1,
-                0,pi2,5,1,
-                0,pi2,0,1,
-                0,0,5,1};
+#define ROBOT 2
+
+#if ROBOT==1
+int numlink = 5; // Number of Link
+bool zapproach = true; // End effector has approach direction along z?
+double dh[] =  {0, pi2, 5.0,  1,
+                0, pi2, 0  ,  1,
+                0, pi2, 5.0,  1,
+                0, pi2, 0  ,  1,
+                0, 0  , 5.0,  1}; // DH Table
+#endif
+
+#if ROBOT==2
+int numlink = 3;
+bool zapproach = false;
+double dh[] =  {0  , -pi2, 5.0, 1,
+                3.0, 0   ,   0, 1,
+                3.0,  pi2,   0, 1};
+#endif
+
+#if ROBOT==3
+int numlink = 3;
+bool zapproach = true;
+double dh[] =  {0, pi2, 5.0, 1,
+                0, pi2,   0, 1,
+                0, 0  , 5.0, 1};
+#endif
 
 /* Robot Structure */
 Robot* r;
@@ -164,7 +185,7 @@ void init(){
     LoadGLTextures();
     
     /* Create Robot */
-    r = new Robot(numlink,dh,texture);
+    r = new Robot(numlink,dh,zapproach,texture);
 
 }
 
