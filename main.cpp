@@ -54,32 +54,32 @@ int linksel = 0;
 
 /* TABELLA DH [a alpha d theta] */
 
-#define ROBOT 2
+#define ROBOT 1
 
-#if ROBOT==1
+#if ROBOT==1 // 5R Robot
 int numlink = 5; // Number of Link
 bool zapproach = true; // End effector has approach direction along z?
-double dh[] =  {0, pi2, 5.0,  1,
-                0, pi2, 0  ,  1,
-                0, pi2, 5.0,  1,
-                0, pi2, 0  ,  1,
-                0, 0  , 5.0,  1}; // DH Table
+double dh[] =  {0, pi2, 5.0,  0,
+                0, pi2, 0  ,  0,
+                0, pi2, 5.0,  0,
+                0, pi2, 0  ,  0,
+                0, 0  , 5.0,  0}; // DH Table
 #endif
 
-#if ROBOT==2
+#if ROBOT==2 // 3R Antropomorphic Robot
 int numlink = 3;
 bool zapproach = false;
-double dh[] =  {0  , -pi2, 5.0, 1,
-                3.0, 0   ,   0, 1,
-                3.0,  pi2,   0, 1};
+double dh[] =  {0  , -pi2, 5.0, 0,
+                3.0, 0   ,   0, 0,
+                3.0,  pi2,   0, 0};
 #endif
 
-#if ROBOT==3
+#if ROBOT==3 // 3R Spherical Wrist
 int numlink = 3;
 bool zapproach = true;
-double dh[] =  {0, pi2, 5.0, 1,
-                0, pi2,   0, 1,
-                0, 0  , 5.0, 1};
+double dh[] =  {0, pi2, 5.0, 0,
+                0, pi2,   0, 0,
+                0, 0  , 5.0, 0};
 #endif
 
 /* Robot Structure */
